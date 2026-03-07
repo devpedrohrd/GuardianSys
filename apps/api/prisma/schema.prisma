@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  INVESTIGATOR
+  ADMIN
+  BILLING_AGENT
+}
+
+model Tenant {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String
+  slug           String   @unique
+  customDomain   String?  @unique
+  logoUrl        String?
+  faviconUrl     String?
+  primaryColor   String?
+  secondaryColor String?
+  displayName    String?
+  document       String?
+  email          String?
+  phone          String?
+  address        String?
+  plan           String?
+  isActive       Boolean  @default(true)
+
+  users          User[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("tenants")
+}
+
+model User {
+  id                String   @id @default(uuid()) @db.Uuid
+
+  tenantId          String   @db.Uuid
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  uid               String
+  name              String
+  email             String
+  password          String
+
+  roles             Role   @default(INVESTIGATOR)
+
+  createdById       String?  @db.Uuid
+  createdBy         User?    @relation("UserCreator", fields: [createdById], references: [id])
+  createdUsers      User[]   @relation("UserCreator")
+
+  canViewOthers     Boolean  @default(false)
+  canEditOthers     Boolean  @default(false)
+  canDeleteOthers   Boolean  @default(false)
+  canDeleteOwn      Boolean  @default(true)
+
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([tenantId, uid])
+  @@index([tenantId])
+  @@index([email])
+
+  @@map("users")
+}

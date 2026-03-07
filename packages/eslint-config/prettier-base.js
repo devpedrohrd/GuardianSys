@@ -4,6 +4,8 @@
  */
 const config = {
   singleQuote: true,
+  trailingComma: 'all',
+  semi: false,
 };
 
 export default config;

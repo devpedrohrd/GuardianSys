@@ -1,0 +1,7 @@
+export { DomainException } from './domain.exception'
+export { TenantNotFoundException } from './domain.exception'
+export { InvalidTenantDataException } from './domain.exception'
+export { TenantAlreadyExistsException } from './domain.exception'
+export { InvalidTenantPlanException } from './domain.exception'
+export { TenantUnauthorizedException } from './domain.exception'
+export { TenantInactiveException } from './domain.exception'

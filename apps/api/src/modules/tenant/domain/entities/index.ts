@@ -1,0 +1,1 @@
+export { TenantEntity } from './Tenant'
