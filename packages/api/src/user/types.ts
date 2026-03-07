@@ -3,7 +3,6 @@ import type { Role } from '../common/types.js'
 export interface User {
   id: string
   tenantId: string
-  uid: string
   name: string
   email: string
   password: string
@@ -19,7 +18,6 @@ export interface User {
 
 export interface CreateUserInput {
   tenantId: string
-  uid: string
   name: string
   email: string
   password: string
@@ -44,4 +42,4 @@ export interface SearchUserFilter {
 }
 
 export interface UpdateUserInput
-  extends Partial<Omit<CreateUserInput, 'tenantId' | 'uid'>> {}
+  extends Partial<Omit<CreateUserInput, 'tenantId'>> { }

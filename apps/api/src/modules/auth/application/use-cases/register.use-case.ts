@@ -69,7 +69,6 @@ export class RegisterUseCase {
       const user = await tx.user.create({
         data: {
           tenantId: tenant.id,
-          uid: input.adminEmail.toLowerCase(),
           name: input.adminName,
           email: input.adminEmail.toLowerCase(),
           password: hashedPassword,

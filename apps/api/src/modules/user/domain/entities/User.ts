@@ -5,7 +5,6 @@ type UserData = User | (Omit<User, 'password'> & { password?: string })
 export class UserEntity implements Omit<User, 'password'> {
   readonly id: string
   readonly tenantId: string
-  readonly uid: string
   readonly name: string
   readonly email: string
   readonly roles: User['roles']
@@ -20,7 +19,6 @@ export class UserEntity implements Omit<User, 'password'> {
   private constructor(props: Omit<User, 'password'>) {
     this.id = props.id
     this.tenantId = props.tenantId
-    this.uid = props.uid
     this.name = props.name
     this.email = props.email
     this.roles = props.roles

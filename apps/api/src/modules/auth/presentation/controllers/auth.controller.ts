@@ -6,6 +6,7 @@ import {
   HttpStatus,
   UseFilters,
   Res,
+  Get,
 } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { RegisterUseCase, LoginUseCase } from '../../application/use-cases'
@@ -84,6 +85,18 @@ export class AuthController {
 
     return res.status(HttpStatus.OK).json({
       message: 'Login realizado com sucesso',
+    })
+  }
+
+  @Get('logout')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Deslogar usuário' })
+  @ApiResponse({ status: 200, description: 'Usuário deslogado com sucesso' })
+  async logout(@Res() res: Response) {
+    res.clearCookie('access_token')
+    res.clearCookie('refresh_token')
+    return res.status(HttpStatus.OK).json({
+      message: 'Usuário deslogado com sucesso',
     })
   }
 }

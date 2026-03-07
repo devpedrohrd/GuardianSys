@@ -7,7 +7,6 @@ import { UserAlreadyExistsException } from '../../domain/exceptions'
 interface CreateUserCommand {
   tenantId: string
   createdById: string
-  uid: string
   name: string
   email: string
   password: string
@@ -39,7 +38,6 @@ export class CreateUserUseCase {
 
     return this.userRepository.create({
       tenantId: input.tenantId,
-      uid: input.uid,
       name: input.name,
       email: input.email.toLowerCase(),
       password: hashedPassword,

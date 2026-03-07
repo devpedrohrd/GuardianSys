@@ -43,7 +43,6 @@ model User {
   tenantId          String   @db.Uuid
   tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
 
-  uid               String
   name              String
   email             String
   password          String
@@ -62,7 +61,7 @@ model User {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  @@unique([tenantId, uid])
+  @@unique([tenantId, id])
   @@index([tenantId])
   @@index([email])
 

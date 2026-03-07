@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { CreateUserInput } from '@repo/api'
 import {
   IsBoolean,
   IsEmail,
@@ -8,15 +9,19 @@ import {
   IsString,
   MinLength,
 } from 'class-validator'
-import { SearchUsersFilter } from '../../domain/repositories'
 
 const ROLES = ['INVESTIGATOR', 'ADMIN', 'BILLING_AGENT'] as const
 
-export class CreateUserDto {
-  @ApiProperty({ description: 'Identificador único do usuário (uid)' })
+export class CreateUserDto implements CreateUserInput {
+  @ApiProperty({ description: 'Identificador único do tenant' })
   @IsString()
-  @IsNotEmpty()
-  uid!: string
+  @IsOptional()
+  tenantId!: string
+
+  @ApiProperty({ description: 'Identificador único do usuário que criou' })
+  @IsString()
+  @IsOptional()
+  createdById!: string
 
   @ApiProperty({ description: 'Nome do usuário' })
   @IsString()

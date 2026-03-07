@@ -69,7 +69,6 @@ export class UserController {
     return this.createUser.execute({
       tenantId: user.tenantId,
       createdById: user.userId,
-      uid: dto.uid,
       name: dto.name,
       email: dto.email,
       password: dto.password,
