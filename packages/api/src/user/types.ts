@@ -39,6 +39,7 @@ export interface SearchUserFilter {
   canEditOthers?: boolean
   canDeleteOthers?: boolean
   canDeleteOwn?: boolean
+  id?: string
 }
 
 export interface UpdateUserInput

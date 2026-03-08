@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { IUserRepository, USER_REPOSITORY } from '../../domain/repositories'
-import { UserNotFoundException } from '../../domain/exceptions'
+import { UserNotFoundException, InsufficientPermissionsException } from '../../domain/exceptions'
 
 @Injectable()
 export class DeleteUserUseCase {
@@ -9,7 +9,21 @@ export class DeleteUserUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(tenantId: string, id: string): Promise<void> {
+  async execute(tenantId: string, id: string, executorId: string): Promise<void> {
+    const executor = await this.userRepository.findById(tenantId, executorId)
+    
+    if (!executor) {
+      throw new InsufficientPermissionsException()
+    }
+
+    if (id === executorId && !executor.canDeleteOwn) {
+      throw new InsufficientPermissionsException()
+    }
+
+    if (id !== executorId && !executor.canDeleteOthers) {
+      throw new InsufficientPermissionsException()
+    }
+
     const existing = await this.userRepository.findById(tenantId, id)
 
     if (!existing) {

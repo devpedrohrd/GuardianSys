@@ -86,10 +86,10 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'Usuários encontrados' })
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   async findAll(
-    @CurrentUser('tenantId') tenantId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Query() dto: SearchUserDto,
   ) {
-    return this.findAllUsers.execute(tenantId, dto)
+    return this.findAllUsers.execute(user.tenantId, dto, user.userId)
   }
 
   @Get(':id')
@@ -99,10 +99,10 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async findById(
-    @CurrentUser('tenantId') tenantId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
   ) {
-    return this.findUserById.execute(tenantId, id)
+    return this.findUserById.execute(user.tenantId, id, user.userId)
   }
 
   @Patch(':id')
@@ -114,11 +114,11 @@ export class UserController {
   @ApiResponse({ status: 401, description: 'Não autenticado' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async update(
-    @CurrentUser('tenantId') tenantId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
   ) {
-    return this.updateUser.execute(tenantId, id, dto)
+    return this.updateUser.execute(user.tenantId, id, dto, user.userId)
   }
 
   @Delete(':id')
@@ -131,9 +131,9 @@ export class UserController {
   @ApiResponse({ status: 403, description: 'Sem permissão' })
   @ApiResponse({ status: 404, description: 'Usuário não encontrado' })
   async remove(
-    @CurrentUser('tenantId') tenantId: string,
+    @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
   ) {
-    await this.deleteUser.execute(tenantId, id)
+    await this.deleteUser.execute(user.tenantId, id, user.userId)
   }
 }

@@ -1,12 +1,5 @@
-import { CreateUserInput, UpdateUserInput, User } from '@repo/api'
+import { CreateUserInput, UpdateUserInput, SearchUserFilter } from '@repo/api'
 import { UserEntity } from '../entities'
-
-export interface SearchUsersFilter {
-  skip?: number
-  limit?: number
-  name?: string
-  email?: string
-}
 
 export interface PaginatedUsers {
   total: number
@@ -16,7 +9,7 @@ export interface PaginatedUsers {
 export interface IUserRepository {
   findById(tenantId: string, id: string): Promise<UserEntity | null>
   findByEmail(tenantId: string, email: string): Promise<UserEntity | null>
-  findAll(tenantId: string, filter: SearchUsersFilter): Promise<PaginatedUsers>
+  findAll(tenantId: string, filter: SearchUserFilter): Promise<PaginatedUsers>
   create(input: CreateUserInput): Promise<UserEntity>
   update(
     tenantId: string,

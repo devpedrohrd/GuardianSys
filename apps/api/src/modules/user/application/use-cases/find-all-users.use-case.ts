@@ -2,9 +2,10 @@ import { Inject, Injectable } from '@nestjs/common'
 import {
   IUserRepository,
   USER_REPOSITORY,
-  SearchUsersFilter,
   PaginatedUsers,
 } from '../../domain/repositories'
+import { InsufficientPermissionsException } from '../../domain/exceptions'
+import { SearchUserFilter } from '@repo/api'
 
 @Injectable()
 export class FindAllUsersUseCase {
@@ -15,8 +16,19 @@ export class FindAllUsersUseCase {
 
   async execute(
     tenantId: string,
-    filter: SearchUsersFilter,
+    filter: SearchUserFilter,
+    executorId: string,
   ): Promise<PaginatedUsers> {
+    const executor = await this.userRepository.findById(tenantId, executorId)
+
+    if (!executor) {
+      throw new InsufficientPermissionsException()
+    }
+
+    if (!executor.canViewOthers) {
+      filter.id = executorId
+    }
+
     return this.userRepository.findAll(tenantId, filter)
   }
 }
