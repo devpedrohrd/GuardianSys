@@ -2,31 +2,35 @@ import type { Role } from '../common/types.js'
 
 export interface User {
   id: string
-  tenantId: string
+  tenantId: string | null
   name: string
   email: string
   password: string
-  roles: Role
+  role: Role
   createdById: string | null
+  canManageProducts: boolean
+  canCreateCharges: boolean
+  canExportData: boolean
+  canReopenCases: boolean
   canViewOthers: boolean
   canEditOthers: boolean
-  canDeleteOthers: boolean
-  canDeleteOwn: boolean
   createdAt: Date
   updatedAt: Date
 }
 
 export interface CreateUserInput {
-  tenantId: string
+  tenantId: string | null
   name: string
   email: string
   password: string
-  roles?: Role
-  createdById?: string | null
-  canViewOthers?: boolean
-  canEditOthers?: boolean
-  canDeleteOthers?: boolean
-  canDeleteOwn?: boolean
+  role: Role
+  createdById: string | null
+  canManageProducts: boolean
+  canCreateCharges: boolean
+  canExportData: boolean
+  canReopenCases: boolean
+  canViewOthers: boolean
+  canEditOthers: boolean
 }
 
 export interface SearchUserFilter {
@@ -34,11 +38,13 @@ export interface SearchUserFilter {
   limit?: number
   name?: string
   email?: string
-  roles?: Role
+  role?: Role
+  canManageProducts?: boolean
+  canCreateCharges?: boolean
+  canExportData?: boolean
+  canReopenCases?: boolean
   canViewOthers?: boolean
   canEditOthers?: boolean
-  canDeleteOthers?: boolean
-  canDeleteOwn?: boolean
   id?: string
 }
 

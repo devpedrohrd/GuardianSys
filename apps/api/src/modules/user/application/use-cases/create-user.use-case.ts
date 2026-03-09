@@ -3,19 +3,7 @@ import * as bcrypt from 'bcryptjs'
 import { UserEntity } from '../../domain/entities'
 import { IUserRepository, USER_REPOSITORY } from '../../domain/repositories'
 import { UserAlreadyExistsException } from '../../domain/exceptions'
-
-interface CreateUserCommand {
-  tenantId: string
-  createdById: string
-  name: string
-  email: string
-  password: string
-  roles?: 'INVESTIGATOR' | 'ADMIN' | 'BILLING_AGENT'
-  canViewOthers?: boolean
-  canEditOthers?: boolean
-  canDeleteOthers?: boolean
-  canDeleteOwn?: boolean
-}
+import { CreateUserInput } from '@repo/api'
 
 @Injectable()
 export class CreateUserUseCase {
@@ -24,9 +12,9 @@ export class CreateUserUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(input: CreateUserCommand): Promise<UserEntity> {
+  async execute(input: CreateUserInput): Promise<UserEntity> {
     const existing = await this.userRepository.findByEmail(
-      input.tenantId,
+      input.tenantId as string,
       input.email,
     )
 
@@ -37,16 +25,9 @@ export class CreateUserUseCase {
     const hashedPassword = await bcrypt.hash(input.password, 10)
 
     return this.userRepository.create({
-      tenantId: input.tenantId,
-      name: input.name,
-      email: input.email.toLowerCase(),
+      ...input,
       password: hashedPassword,
-      roles: input.roles,
-      createdById: input.createdById,
-      canViewOthers: input.canViewOthers,
-      canEditOthers: input.canEditOthers,
-      canDeleteOthers: input.canDeleteOthers,
-      canDeleteOwn: input.canDeleteOwn,
+      email: input.email.toLowerCase(),
     })
   }
 }

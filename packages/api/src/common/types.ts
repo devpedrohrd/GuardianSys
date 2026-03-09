@@ -1,4 +1,4 @@
-export type Role = 'INVESTIGATOR' | 'ADMIN' | 'BILLING_AGENT'
+export type Role = 'INVESTIGATOR' | 'ADMIN' | 'SUPER_ADMIN'
 
 export interface ApiResponse<T> {
   data: T

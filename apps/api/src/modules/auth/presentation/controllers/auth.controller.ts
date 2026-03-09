@@ -9,8 +9,8 @@ import {
   Get,
 } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { RegisterUseCase, LoginUseCase } from '../../application/use-cases'
-import { RegisterDto, LoginDto } from '../dtos'
+import { LoginUseCase } from '../../application/use-cases'
+import { LoginDto } from '../dtos'
 import { AuthExceptionFilter } from '../filters'
 import { Response } from 'express'
 
@@ -19,42 +19,8 @@ import { Response } from 'express'
 @UseFilters(AuthExceptionFilter)
 export class AuthController {
   constructor(
-    private readonly registerUseCase: RegisterUseCase,
     private readonly loginUseCase: LoginUseCase,
   ) {}
-
-  @Post('register')
-  @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Registrar nova empresa e administrador' })
-  @ApiBody({ type: RegisterDto })
-  @ApiResponse({
-    status: 201,
-    description: 'Empresa e administrador criados com sucesso',
-  })
-  @ApiResponse({ status: 400, description: 'Dados inválidos' })
-  @ApiResponse({ status: 409, description: 'Slug ou e-mail já existente' })
-  async register(@Body() dto: RegisterDto, @Res() res: Response) {
-    const result = await this.registerUseCase.execute(dto)
-
-    res.cookie('access_token', result.accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 15, // 15 minutos
-    })
-
-    res.cookie('refresh_token', result.refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
-    })
-
-    return res.status(HttpStatus.CREATED).json({
-      tenant: result.tenant,
-      user: result.user,
-    })
-  }
 
   @Post('login')
   @HttpCode(HttpStatus.OK)
@@ -67,20 +33,19 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   @ApiResponse({ status: 403, description: 'Empresa inativa' })
   async login(@Body() dto: LoginDto, @Res() res: Response) {
-    const result = await this.loginUseCase.execute(dto)
+    const { accessToken, refreshToken } = await this.loginUseCase.execute(dto)
 
-    res.cookie('access_token', result.accessToken, {
+    res.cookie('access_token', accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 1000 * 60 * 15, // 15 minutos
+      maxAge: process.env.JWT_ACCESS_TOKEN_EXPIRY_TIME as unknown as number,
     })
-
-    res.cookie('refresh_token', result.refreshToken, {
+    res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
+      maxAge: process.env.JWT_REFRESH_TOKEN_EXPIRY_TIME as unknown as number,
     })
 
     return res.status(HttpStatus.OK).json({

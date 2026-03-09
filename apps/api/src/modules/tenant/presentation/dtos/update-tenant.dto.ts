@@ -1,5 +1,7 @@
-import { UpdateTenantInput } from '@repo/api'
-import { IsOptional, IsString } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger'
+import type { UpdateTenantInput } from '@repo/api'
+import { IsOptional, IsString, IsEnum, IsBoolean } from 'class-validator'
+import { Plan, SubscriptionStatus } from '../../../../common/enums'
 
 export class UpdateTenantDto implements UpdateTenantInput {
   @IsOptional()
@@ -50,7 +52,17 @@ export class UpdateTenantDto implements UpdateTenantInput {
   @IsString()
   address?: string | null
 
+  @ApiProperty({ enum: Plan, enumName: 'Plan', required: false, nullable: true })
   @IsOptional()
-  @IsString()
-  plan?: string | null
+  @IsEnum(Plan)
+  plan?: Plan | null
+
+  @ApiProperty({ enum: SubscriptionStatus, enumName: 'SubscriptionStatus', required: false })
+  @IsOptional()
+  @IsEnum(SubscriptionStatus)
+  subscriptionStatus?: SubscriptionStatus
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean
 }

@@ -3,7 +3,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { PrismaModule } from '../../config/database/Prisma.module'
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy'
-import { RegisterUseCase, LoginUseCase } from './application/use-cases'
+import { LoginUseCase } from './application/use-cases'
 import { AuthController } from './presentation/controllers'
 
 @Module({
@@ -18,7 +18,8 @@ import { AuthController } from './presentation/controllers'
     }),
   ],
   controllers: [AuthController],
-  providers: [JwtStrategy, RegisterUseCase, LoginUseCase],
+  providers: [JwtStrategy, LoginUseCase],
   exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}
+

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { CreateTenantInput, UpdateTenantInput } from '@repo/api'
+import { CreateTenantInput, UpdateTenantInput, Plan, SubscriptionStatus } from '@repo/api'
 import { PrismaService } from '../../../../config/database/Prisma.service'
 import { TenantEntity } from '../../domain/entities'
 import {
@@ -19,7 +19,11 @@ export class PrismaTenantRepository implements ITenantRepository {
 
     if (!tenant) return null
 
-    return TenantEntity.restore(tenant)
+    return TenantEntity.restore({
+      ...tenant,
+      plan: tenant.plan as Plan | null,
+      subscriptionStatus: tenant.subscriptionStatus as SubscriptionStatus,
+    })
   }
 
   async findBySlug(slug: string): Promise<TenantEntity | null> {
@@ -29,7 +33,11 @@ export class PrismaTenantRepository implements ITenantRepository {
 
     if (!tenant) return null
 
-    return TenantEntity.restore(tenant)
+    return TenantEntity.restore({
+      ...tenant,
+      plan: tenant.plan as Plan | null,
+      subscriptionStatus: tenant.subscriptionStatus as SubscriptionStatus,
+    })
   }
 
   async create(input: CreateTenantInput): Promise<TenantEntity> {
@@ -47,20 +55,32 @@ export class PrismaTenantRepository implements ITenantRepository {
         email: input.email ?? null,
         phone: input.phone ?? null,
         address: input.address ?? null,
-        plan: input.plan ?? null,
+        plan: input.plan as unknown as any ?? null,
       },
     })
 
-    return TenantEntity.restore(tenant)
+    return TenantEntity.restore({
+      ...tenant,
+      plan: tenant.plan as Plan | null,
+      subscriptionStatus: tenant.subscriptionStatus as SubscriptionStatus,
+    })
   }
 
   async update(id: string, input: UpdateTenantInput): Promise<TenantEntity> {
     const tenant = await this.prisma.tenant.update({
       where: { id },
-      data: input,
+      data: {
+        ...input,
+        subscriptionStatus: input.subscriptionStatus ?? undefined,
+        plan: input.plan as any,
+      },
     })
 
-    return TenantEntity.restore(tenant)
+    return TenantEntity.restore({
+      ...tenant,
+      plan: tenant.plan as Plan | null,
+      subscriptionStatus: tenant.subscriptionStatus as SubscriptionStatus,
+    })
   }
 
   async delete(id: string): Promise<void> {
@@ -93,7 +113,11 @@ export class PrismaTenantRepository implements ITenantRepository {
     ])
 
     return {
-      tenants: tenants.map((t) => TenantEntity.restore(t)),
+      tenants: tenants.map((t) => TenantEntity.restore({
+        ...t,
+        plan: t.plan as Plan | null,
+        subscriptionStatus: t.subscriptionStatus as SubscriptionStatus,
+      })),
       total,
     }
   }

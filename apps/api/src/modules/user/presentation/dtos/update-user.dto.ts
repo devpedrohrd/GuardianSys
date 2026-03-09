@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
+import { Role, UpdateUserInput } from '@repo/api'
 import {
   IsBoolean,
   IsEmail,
@@ -7,10 +8,9 @@ import {
   IsString,
   MinLength,
 } from 'class-validator'
+import { ROLES } from './create-user.dto'
 
-const ROLES = ['INVESTIGATOR', 'ADMIN', 'BILLING_AGENT'] as const
-
-export class UpdateUserDto {
+export class UpdateUserDto implements UpdateUserInput {
   @ApiPropertyOptional({ description: 'Nome do usuário' })
   @IsString()
   @IsOptional()
@@ -21,23 +21,38 @@ export class UpdateUserDto {
   @IsOptional()
   email?: string
 
-  @ApiPropertyOptional({ description: 'Nova senha (mínimo 6 caracteres)' })
+  @ApiPropertyOptional({ description: 'Senha do usuário' })
   @IsString()
   @MinLength(6)
   @IsOptional()
   password?: string
 
-  @ApiPropertyOptional({
-    description: 'Role do usuário',
-    enum: ROLES,
-  })
+  @ApiPropertyOptional({ description: 'Role do usuário' })
   @IsEnum(ROLES)
   @IsOptional()
-  roles?: (typeof ROLES)[number]
+  role?: Role
 
-  @ApiPropertyOptional({
-    description: 'Pode visualizar dados de outros usuários',
-  })
+  @ApiPropertyOptional({ description: 'Pode gerenciar produtos' })
+  @IsBoolean()
+  @IsOptional()
+  canManageProducts?: boolean
+
+  @ApiPropertyOptional({ description: 'Pode criar cobranças' })
+  @IsBoolean()
+  @IsOptional()
+  canCreateCharges?: boolean
+
+  @ApiPropertyOptional({ description: 'Pode exportar dados' })
+  @IsBoolean()
+  @IsOptional()
+  canExportData?: boolean
+
+  @ApiPropertyOptional({ description: 'Pode reabrir casos' })
+  @IsBoolean()
+  @IsOptional()
+  canReopenCases?: boolean
+
+  @ApiPropertyOptional({ description: 'Pode visualizar dados de outros usuários' })
   @IsBoolean()
   @IsOptional()
   canViewOthers?: boolean
@@ -47,13 +62,8 @@ export class UpdateUserDto {
   @IsOptional()
   canEditOthers?: boolean
 
-  @ApiPropertyOptional({ description: 'Pode deletar dados de outros usuários' })
-  @IsBoolean()
+  @ApiPropertyOptional({ description: 'Identificador único do usuário que criou' })
+  @IsString()
   @IsOptional()
-  canDeleteOthers?: boolean
-
-  @ApiPropertyOptional({ description: 'Pode deletar os próprios dados' })
-  @IsBoolean()
-  @IsOptional()
-  canDeleteOwn?: boolean
+  createdById?: string
 }

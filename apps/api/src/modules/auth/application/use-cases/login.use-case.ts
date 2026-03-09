@@ -37,14 +37,21 @@ export class LoginUseCase {
       throw new InvalidCredentialsException()
     }
 
-    if (!user.tenant.isActive) {
-      throw new InactiveTenantException()
+    // SUPER_ADMIN não possui tenant — pular validação de tenant
+    if (user.role !== 'SUPER_ADMIN') {
+      if (!user.tenant) {
+        throw new InvalidCredentialsException()
+      }
+
+      if (!user.tenant.isActive) {
+        throw new InactiveTenantException()
+      }
     }
 
     const payload: JwtPayload = {
       sub: user.id,
-      tenantId: user.tenantId,
-      roles: user.roles,
+      tenantId: user.tenantId, // null para SUPER_ADMIN
+      role: user.role,
     }
 
     const accessToken = this.jwtService.sign(payload, {

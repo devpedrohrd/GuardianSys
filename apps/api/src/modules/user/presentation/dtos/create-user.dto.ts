@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { CreateUserInput } from '@repo/api'
+import { CreateUserInput, Role } from '@repo/api'
 import {
   IsBoolean,
   IsEmail,
@@ -10,18 +10,13 @@ import {
   MinLength,
 } from 'class-validator'
 
-const ROLES = ['INVESTIGATOR', 'ADMIN', 'BILLING_AGENT'] as const
+export const ROLES = ['INVESTIGATOR', 'ADMIN'] as const
 
 export class CreateUserDto implements CreateUserInput {
   @ApiProperty({ description: 'Identificador único do tenant' })
   @IsString()
   @IsOptional()
   tenantId!: string
-
-  @ApiProperty({ description: 'Identificador único do usuário que criou' })
-  @IsString()
-  @IsOptional()
-  createdById!: string
 
   @ApiProperty({ description: 'Nome do usuário' })
   @IsString()
@@ -45,27 +40,40 @@ export class CreateUserDto implements CreateUserInput {
   })
   @IsEnum(ROLES)
   @IsOptional()
-  roles?: (typeof ROLES)[number]
+  role!: Role
 
-  @ApiPropertyOptional({
-    description: 'Pode visualizar dados de outros usuários',
-  })
+  @ApiProperty({ description: 'Identificador único do usuário que criou' })
+  @IsString()
+  @IsOptional()
+  createdById!: string
+
+  @ApiProperty({ description: 'Pode gerenciar produtos' })
   @IsBoolean()
   @IsOptional()
-  canViewOthers?: boolean
+  canManageProducts!: boolean
 
-  @ApiPropertyOptional({ description: 'Pode editar dados de outros usuários' })
+  @ApiProperty({ description: 'Pode criar cobranças' })
   @IsBoolean()
   @IsOptional()
-  canEditOthers?: boolean
+  canCreateCharges!: boolean
 
-  @ApiPropertyOptional({ description: 'Pode deletar dados de outros usuários' })
+  @ApiProperty({ description: 'Pode exportar dados' })
   @IsBoolean()
   @IsOptional()
-  canDeleteOthers?: boolean
+  canExportData!: boolean
 
-  @ApiPropertyOptional({ description: 'Pode deletar os próprios dados' })
+  @ApiProperty({ description: 'Pode reabrir casos' })
   @IsBoolean()
   @IsOptional()
-  canDeleteOwn?: boolean
+  canReopenCases!: boolean
+
+  @ApiProperty({ description: 'Pode visualizar dados de outros usuários' })
+  @IsBoolean()
+  @IsOptional()
+  canViewOthers!: boolean
+
+  @ApiProperty({ description: 'Pode editar dados de outros usuários' })
+  @IsBoolean()
+  @IsOptional()
+  canEditOthers!: boolean
 }

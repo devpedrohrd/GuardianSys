@@ -67,16 +67,9 @@ export class UserController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.createUser.execute({
-      tenantId: user.tenantId,
+      ...dto,
+      tenantId: user.tenantId as string,
       createdById: user.userId,
-      name: dto.name,
-      email: dto.email,
-      password: dto.password,
-      roles: dto.roles,
-      canViewOthers: dto.canViewOthers,
-      canEditOthers: dto.canEditOthers,
-      canDeleteOthers: dto.canDeleteOthers,
-      canDeleteOwn: dto.canDeleteOwn,
     })
   }
 
@@ -89,7 +82,7 @@ export class UserController {
     @CurrentUser() user: AuthenticatedUser,
     @Query() dto: SearchUserDto,
   ) {
-    return this.findAllUsers.execute(user.tenantId, dto, user.userId)
+    return this.findAllUsers.execute(user.tenantId as string, dto, user.userId)
   }
 
   @Get(':id')
@@ -102,7 +95,7 @@ export class UserController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
   ) {
-    return this.findUserById.execute(user.tenantId, id, user.userId)
+    return this.findUserById.execute(user.tenantId as string, id, user.userId)
   }
 
   @Patch(':id')
@@ -118,7 +111,7 @@ export class UserController {
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
   ) {
-    return this.updateUser.execute(user.tenantId, id, dto, user.userId)
+    return this.updateUser.execute(user.tenantId as string, id, dto, user.userId)
   }
 
   @Delete(':id')
@@ -134,6 +127,6 @@ export class UserController {
     @CurrentUser() user: AuthenticatedUser,
     @Param('id') id: string,
   ) {
-    await this.deleteUser.execute(user.tenantId, id, user.userId)
+    await this.deleteUser.execute(user.tenantId as string, id, user.userId)
   }
 }

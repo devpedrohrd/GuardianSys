@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { FindAllUsersUseCase } from './find-all-users.use-case'
-import { USER_REPOSITORY } from '../../domain/repositories'
-import { InsufficientPermissionsException } from '../../domain/exceptions'
-import { UserEntity } from '../../domain/entities'
+import { FindAllUsersUseCase } from '../find-all-users.use-case'
+import { USER_REPOSITORY } from '../../../domain/repositories'
+import { InsufficientPermissionsException } from '../../../domain/exceptions'
+import { UserEntity } from '../../../domain/entities'
 
 describe('FindAllUsersUseCase', () => {
   let useCase: FindAllUsersUseCase
@@ -41,12 +41,14 @@ describe('FindAllUsersUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Executor',
       email: 'exec@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: false,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -71,12 +73,14 @@ describe('FindAllUsersUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Executor',
       email: 'exec@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: true,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })

@@ -16,11 +16,11 @@ export class DeleteUserUseCase {
       throw new InsufficientPermissionsException()
     }
 
-    if (id === executorId && !executor.canDeleteOwn) {
+    if (id === executorId && executor.role !== 'ADMIN' && executor.role !== 'SUPER_ADMIN') {
       throw new InsufficientPermissionsException()
     }
 
-    if (id !== executorId && !executor.canDeleteOthers) {
+    if (id !== executorId && executor.role !== 'ADMIN' && executor.role !== 'SUPER_ADMIN') {
       throw new InsufficientPermissionsException()
     }
 

@@ -1,4 +1,4 @@
-import { Tenant, CreateTenantInput } from '@repo/api'
+import { Tenant, CreateTenantInput, Plan, SubscriptionStatus } from '@repo/api'
 import { Email } from '../value-objects'
 import { Phone } from '../value-objects'
 import { InvalidTenantDataException } from '../exceptions'
@@ -17,7 +17,8 @@ export class TenantEntity implements Tenant {
   readonly email: string | null
   readonly phone: string | null
   readonly address: string | null
-  readonly plan: string | null
+  readonly plan: Plan | null
+  readonly subscriptionStatus: SubscriptionStatus | null
   readonly isActive: boolean
   readonly createdAt: Date
   readonly updatedAt: Date
@@ -37,6 +38,7 @@ export class TenantEntity implements Tenant {
     this.phone = props.phone
     this.address = props.address
     this.plan = props.plan
+    this.subscriptionStatus = props.subscriptionStatus
     this.isActive = props.isActive
     this.createdAt = props.createdAt
     this.updatedAt = props.updatedAt
@@ -87,6 +89,7 @@ export class TenantEntity implements Tenant {
       phone: input.phone ?? null,
       address: input.address ?? null,
       plan: input.plan ?? null,
+      subscriptionStatus: input.subscriptionStatus ?? null,
       isActive: true,
       createdAt: now,
       updatedAt: now,

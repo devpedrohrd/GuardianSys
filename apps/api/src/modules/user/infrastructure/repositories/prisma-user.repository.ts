@@ -64,12 +64,14 @@ export class PrismaUserRepository implements IUserRepository {
         name: input.name,
         email: input.email.toLowerCase(),
         password: input.password,
-        roles: input.roles ?? 'INVESTIGATOR',
+        role: input.role ?? 'INVESTIGATOR',
         createdById: input.createdById ?? undefined,
+        canManageProducts: input.canManageProducts ?? false,
+        canCreateCharges: input.canCreateCharges ?? true,
+        canExportData: input.canExportData ?? false,
+        canReopenCases: input.canReopenCases ?? false,
         canViewOthers: input.canViewOthers ?? false,
         canEditOthers: input.canEditOthers ?? false,
-        canDeleteOthers: input.canDeleteOthers ?? false,
-        canDeleteOwn: input.canDeleteOwn ?? true,
       },
     })
 

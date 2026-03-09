@@ -1,11 +1,13 @@
-import { CreateTenantInput } from '@repo/api'
+import { ApiProperty } from '@nestjs/swagger'
+import type { CreateTenantInput } from '@repo/api'
 import {
   IsEmail,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
-  IsPhoneNumber,
   IsString,
 } from 'class-validator'
+import { Plan } from '../../../../common/enums'
 
 export class CreateTenantDto implements CreateTenantInput {
   @IsString()
@@ -44,7 +46,8 @@ export class CreateTenantDto implements CreateTenantInput {
   @IsString()
   @IsOptional()
   address?: string | null
-  @IsString()
+  @ApiProperty({ enum: Plan, enumName: 'Plan', required: false, nullable: true })
+  @IsEnum(Plan)
   @IsOptional()
-  plan?: string | null
+  plan?: Plan | null
 }

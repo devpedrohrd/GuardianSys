@@ -1,18 +1,20 @@
 import { User } from '@repo/api'
 
-type UserData = User | (Omit<User, 'password'> & { password?: string })
+type UserData = Omit<User, 'password'> & { password?: string }
 
 export class UserEntity implements Omit<User, 'password'> {
   readonly id: string
-  readonly tenantId: string
+  readonly tenantId: string | null
   readonly name: string
   readonly email: string
-  readonly roles: User['roles']
+  readonly role: User['role']
   readonly createdById: string | null
+  readonly canManageProducts: boolean
+  readonly canCreateCharges: boolean
+  readonly canExportData: boolean
+  readonly canReopenCases: boolean
   readonly canViewOthers: boolean
   readonly canEditOthers: boolean
-  readonly canDeleteOthers: boolean
-  readonly canDeleteOwn: boolean
   readonly createdAt: Date
   readonly updatedAt: Date
 
@@ -21,12 +23,14 @@ export class UserEntity implements Omit<User, 'password'> {
     this.tenantId = props.tenantId
     this.name = props.name
     this.email = props.email
-    this.roles = props.roles
+    this.role = props.role
     this.createdById = props.createdById
+    this.canManageProducts = props.canManageProducts
+    this.canCreateCharges = props.canCreateCharges
+    this.canExportData = props.canExportData
+    this.canReopenCases = props.canReopenCases
     this.canViewOthers = props.canViewOthers
     this.canEditOthers = props.canEditOthers
-    this.canDeleteOthers = props.canDeleteOthers
-    this.canDeleteOwn = props.canDeleteOwn
     this.createdAt = props.createdAt
     this.updatedAt = props.updatedAt
   }

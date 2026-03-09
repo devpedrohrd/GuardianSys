@@ -19,7 +19,7 @@ export interface RegisterResult {
     id: string
     name: string
     email: string
-    roles: string
+    role: string
   }
   accessToken: string
   refreshToken: string
@@ -72,11 +72,13 @@ export class RegisterUseCase {
           name: input.adminName,
           email: input.adminEmail.toLowerCase(),
           password: hashedPassword,
-          roles: 'ADMIN',
+          role: 'ADMIN',
           canViewOthers: true,
           canEditOthers: true,
-          canDeleteOthers: true,
-          canDeleteOwn: true,
+          canCreateCharges: true,
+          canManageProducts: true,
+          canExportData: true,
+          canReopenCases: true,
         },
       })
 
@@ -86,7 +88,7 @@ export class RegisterUseCase {
     const payload: JwtPayload = {
       sub: result.user.id,
       tenantId: result.tenant.id,
-      roles: result.user.roles,
+      role: result.user.role,
     }
 
     const accessToken = await this.jwtService.signAsync(payload, {
@@ -112,7 +114,7 @@ export class RegisterUseCase {
         id: result.user.id,
         name: result.user.name,
         email: result.user.email,
-        roles: result.user.roles,
+        role: result.user.role,
       },
       accessToken,
       refreshToken,

@@ -45,7 +45,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       )
 
       const newAccessToken = await this.jwtService.signAsync(
-        { sub: payload.sub, tenantId: payload.tenantId, roles: payload.roles },
+        { sub: payload.sub, tenantId: payload.tenantId, role: payload.role },
         {
           secret: process.env.JWT_SECRET || 'fallback-secret',
           expiresIn: (process.env.JWT_EXPIRES_IN || '15m') as any,
@@ -53,7 +53,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       )
 
       const newRefreshToken = await this.jwtService.signAsync(
-        { sub: payload.sub, tenantId: payload.tenantId, roles: payload.roles },
+        { sub: payload.sub, tenantId: payload.tenantId, role: payload.role },
         {
           secret: process.env.JWT_REFRESH_SECRET || 'fallback-refresh-secret',
           expiresIn: (process.env.JWT_REFRESH_EXPIRES_IN || '7d') as any,
@@ -63,21 +63,21 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       request.user = {
         userId: payload.sub,
         tenantId: payload.tenantId,
-        roles: payload.roles,
+        role: payload.role,
       }
 
       response.cookie('access_token', newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 1000 * 60 * 15,
+        maxAge: process.env.JWT_ACCESS_TOKEN_EXPIRY_TIME as unknown as number,
       })
 
       response.cookie('refresh_token', newRefreshToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 1000 * 60 * 60 * 24 * 7,
+        maxAge: process.env.JWT_REFRESH_TOKEN_EXPIRY_TIME as unknown as number,
       })
 
       return true

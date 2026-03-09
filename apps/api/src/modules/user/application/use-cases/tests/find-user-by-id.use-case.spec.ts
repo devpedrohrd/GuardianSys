@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { FindUserByIdUseCase } from './find-user-by-id.use-case'
-import { USER_REPOSITORY } from '../../domain/repositories'
+import { FindUserByIdUseCase } from '../find-user-by-id.use-case'
+import { USER_REPOSITORY } from '../../../domain/repositories'
 import {
   InsufficientPermissionsException,
   UserNotFoundException,
-} from '../../domain/exceptions'
-import { UserEntity } from '../../domain/entities'
+} from '../../../domain/exceptions'
+import { UserEntity } from '../../../domain/entities'
 
 describe('FindUserByIdUseCase', () => {
   let useCase: FindUserByIdUseCase
@@ -43,12 +43,14 @@ describe('FindUserByIdUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Executor',
       email: 'exec@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: false,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -67,12 +69,14 @@ describe('FindUserByIdUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Target',
       email: 'target@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: false,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -82,12 +86,14 @@ describe('FindUserByIdUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Executor',
       email: 'exec@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: false,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -107,12 +113,14 @@ describe('FindUserByIdUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Target',
       email: 'target@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: false,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -122,12 +130,14 @@ describe('FindUserByIdUseCase', () => {
       tenantId: 'tenant-1',
       name: 'Executor',
       email: 'exec@test.com',
-      roles: 'INVESTIGATOR',
+      role: 'INVESTIGATOR',
       createdById: null,
+      canManageProducts: false,
+      canCreateCharges: true,
+      canExportData: false,
+      canReopenCases: false,
       canViewOthers: true,
       canEditOthers: false,
-      canDeleteOthers: false,
-      canDeleteOwn: true,
       createdAt: new Date(),
       updatedAt: new Date(),
     })

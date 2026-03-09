@@ -3,8 +3,8 @@ import { Role } from '@repo/api'
 
 export interface AuthenticatedUser {
   userId: string
-  tenantId: string
-  roles: Role
+  tenantId: string | null
+  role: Role
 }
 
 export interface AuthenticatedRequest extends Request {
