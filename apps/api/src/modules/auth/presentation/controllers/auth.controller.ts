@@ -9,10 +9,12 @@ import {
   Get,
 } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { LoginUseCase } from '../../application/use-cases'
+import { LoginUseCase, ForgotPasswordUseCase, ResetPasswordUseCase } from '../../application/use-cases'
 import { LoginDto } from '../dtos'
 import { AuthExceptionFilter } from '../filters'
 import { Response } from 'express'
+import { ForgotPasswordDto } from '../dtos/forgot-password.dto'
+import { ResetPasswordDto } from '../dtos/reset-password.dto'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -20,6 +22,8 @@ import { Response } from 'express'
 export class AuthController {
   constructor(
     private readonly loginUseCase: LoginUseCase,
+    private readonly forgotPasswordUseCase: ForgotPasswordUseCase,
+    private readonly resetPasswordUseCase: ResetPasswordUseCase,
   ) {}
 
   @Post('login')
@@ -62,6 +66,32 @@ export class AuthController {
     res.clearCookie('refresh_token')
     return res.status(HttpStatus.OK).json({
       message: 'Usuário deslogado com sucesso',
+    })
+  }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Esquecer senha' })
+  @ApiResponse({ status: 200, description: 'Email enviado com sucesso' })
+  @ApiResponse({ status: 404, description: 'Email não encontrado' })
+  @ApiBody({ type: ForgotPasswordDto })
+  async forgotPassword(@Body() dto: ForgotPasswordDto, @Res() res: Response) {
+    await this.forgotPasswordUseCase.execute(dto.email)
+    return res.status(HttpStatus.OK).json({
+      message: 'Email enviado com sucesso',
+    })
+  }
+
+  @Post('reset-password')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Redefinir senha' })
+  @ApiResponse({ status: 200, description: 'Senha redefinida com sucesso' })
+  @ApiResponse({ status: 400, description: 'Token inválido ou expirado' })
+  @ApiBody({ type: ResetPasswordDto })
+  async resetPassword(@Body() dto: ResetPasswordDto, @Res() res: Response) {
+    await this.resetPasswordUseCase.execute(dto.token, dto.newPassword)
+    return res.status(HttpStatus.OK).json({
+      message: 'Senha redefinida com sucesso',
     })
   }
 }

@@ -3,12 +3,14 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { PrismaModule } from '../../config/database/Prisma.module'
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy'
-import { LoginUseCase } from './application/use-cases'
+import { LoginUseCase, ForgotPasswordUseCase, ResetPasswordUseCase } from './application/use-cases'
+import { MailModule } from '../mail/mail.module'
 import { AuthController } from './presentation/controllers'
 
 @Module({
   imports: [
     PrismaModule,
+    MailModule,
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'fallback-secret',
@@ -18,7 +20,7 @@ import { AuthController } from './presentation/controllers'
     }),
   ],
   controllers: [AuthController],
-  providers: [JwtStrategy, LoginUseCase],
+  providers: [JwtStrategy, LoginUseCase, ForgotPasswordUseCase, ResetPasswordUseCase],
   exports: [JwtModule, PassportModule],
 })
 export class AuthModule {}
