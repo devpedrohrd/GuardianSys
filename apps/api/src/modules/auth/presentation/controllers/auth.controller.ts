@@ -39,13 +39,13 @@ export class AuthController {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: process.env.JWT_ACCESS_TOKEN_EXPIRY_TIME as unknown as number,
+      maxAge: 15 * 60 * 1000,
     })
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: process.env.JWT_REFRESH_TOKEN_EXPIRY_TIME as unknown as number,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     })
 
     return res.status(HttpStatus.OK).json({

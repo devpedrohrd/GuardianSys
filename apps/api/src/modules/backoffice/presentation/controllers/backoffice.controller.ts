@@ -15,6 +15,7 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger'
@@ -68,6 +69,10 @@ export class BackofficeController {
   @ApiOperation({ summary: 'Listar todos os tenants (SUPER_ADMIN)' })
   @ApiResponse({ status: 200, description: 'Tenants listados com sucesso' })
   @ApiResponse({ status: 403, description: 'Sem permissão' })
+  @ApiQuery({ name: 'skip', required: false, type: String })
+  @ApiQuery({ name: 'limit', required: false, type: String })
+  @ApiQuery({ name: 'name', required: false, type: String })
+  @ApiQuery({ name: 'isActive', required: false, type: String, description: "'true' ou 'false'" })
   async findAll(
     @Query('skip') skip?: string,
     @Query('limit') limit?: string,

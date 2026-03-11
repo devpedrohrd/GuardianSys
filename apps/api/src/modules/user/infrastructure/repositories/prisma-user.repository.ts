@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { CreateUserInput, SearchUserFilter, UpdateUserInput } from '@repo/api'
+import { CreateUserInput, PaginatedResponse, SearchUserFilter, UpdateUserInput } from '@repo/api'
 import { PrismaService } from '../../../../config/database/Prisma.service'
 import { UserEntity } from '../../domain/entities'
 import {
   IUserRepository,
-  PaginatedUsers,
 } from '../../domain/repositories'
 import { BuildFilterDto } from '../utils/SearchFilters'
 
@@ -38,8 +37,10 @@ export class PrismaUserRepository implements IUserRepository {
   async findAll(
     tenantId: string,
     filter: SearchUserFilter,
-  ): Promise<PaginatedUsers> {
-    const { skip, limit, where } = BuildFilterDto({ ...filter, tenantId })
+  ): Promise<PaginatedResponse<UserEntity>> {
+    const { skip = 0, limit = 10, where } = BuildFilterDto({ ...filter, tenantId })
+
+    const page = skip / limit + 1
 
     const [users, total] = await Promise.all([
       this.prisma.user.findMany({
@@ -52,7 +53,9 @@ export class PrismaUserRepository implements IUserRepository {
     ])
 
     return {
-      users: users.map((u) => UserEntity.restore(u)),
+      data: users.map((u) => UserEntity.restore(u)),
+      limit,
+      page,
       total,
     }
   }
