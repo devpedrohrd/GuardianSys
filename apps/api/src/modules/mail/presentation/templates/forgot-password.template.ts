@@ -1,5 +1,5 @@
 export const getForgotPasswordEmailTemplate = (resetUrl: string) => {
-  const text = `Olá!\n\nRecebemos uma solicitação para redefinir a senha da sua conta no GuardianSys.\n\nPara criar uma nova senha, acesse o link abaixo:\n${resetUrl}\n\nSe você não solicitou essa redefinição, apenas ignore este e-mail. A sua conta continuará segura.\n\nAtenciosamente,\nEquipe GuardianSys`;
+  const text = `Olá!\n\nRecebemos uma solicitação para redefinir a senha da sua conta no GuardianSys.\n\nPara criar uma nova senha, acesse o link abaixo:\n${resetUrl}\n\nSe você não solicitou essa redefinição, apenas ignore este e-mail. A sua conta continuará segura.\n\nAtenciosamente,\nEquipe GuardianSys`
 
   const html = `
 <!DOCTYPE html>
@@ -93,7 +93,7 @@ export const getForgotPasswordEmailTemplate = (resetUrl: string) => {
   </div>
 </body>
 </html>
-  `;
+  `
 
-  return { text, html };
-};
+  return { text, html }
+}

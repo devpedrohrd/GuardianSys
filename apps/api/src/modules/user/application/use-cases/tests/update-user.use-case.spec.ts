@@ -56,7 +56,12 @@ describe('UpdateUserUseCase', () => {
     userRepository.findById.mockResolvedValueOnce(executorUser)
 
     await expect(
-      useCase.execute('tenant-1', 'target-1', { name: 'New Name' }, 'executor-1'),
+      useCase.execute(
+        'tenant-1',
+        'target-1',
+        { name: 'New Name' },
+        'executor-1',
+      ),
     ).rejects.toThrow(InsufficientPermissionsException)
   })
 
@@ -83,7 +88,12 @@ describe('UpdateUserUseCase', () => {
       .mockResolvedValueOnce(null) // second call gets target
 
     await expect(
-      useCase.execute('tenant-1', 'target-1', { name: 'New Name' }, 'executor-1'),
+      useCase.execute(
+        'tenant-1',
+        'target-1',
+        { name: 'New Name' },
+        'executor-1',
+      ),
     ).rejects.toThrow(UserNotFoundException)
   })
 
@@ -115,9 +125,13 @@ describe('UpdateUserUseCase', () => {
       'executor-1',
     )
     expect(result).toEqual({ ...user, name: 'New Name' })
-    expect(userRepository.update).toHaveBeenCalledWith('tenant-1', 'executor-1', {
-      name: 'New Name',
-    })
+    expect(userRepository.update).toHaveBeenCalledWith(
+      'tenant-1',
+      'executor-1',
+      {
+        name: 'New Name',
+      },
+    )
   })
 
   it('should hash password before saving', async () => {
@@ -139,7 +153,10 @@ describe('UpdateUserUseCase', () => {
     })
 
     userRepository.findById.mockResolvedValueOnce(user) // gets target (itself)
-    userRepository.update.mockResolvedValueOnce({ ...user, password: 'hashed-password' })
+    userRepository.update.mockResolvedValueOnce({
+      ...user,
+      password: 'hashed-password',
+    })
 
     await useCase.execute(
       'tenant-1',
@@ -147,10 +164,14 @@ describe('UpdateUserUseCase', () => {
       { password: 'plain-password' },
       'executor-1',
     )
-    
+
     expect(bcrypt.hash).toHaveBeenCalledWith('plain-password', 10)
-    expect(userRepository.update).toHaveBeenCalledWith('tenant-1', 'executor-1', {
-      password: 'hashed-password',
-    })
+    expect(userRepository.update).toHaveBeenCalledWith(
+      'tenant-1',
+      'executor-1',
+      {
+        password: 'hashed-password',
+      },
+    )
   })
 })

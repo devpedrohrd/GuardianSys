@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common'
-import { CreateTenantInput, UpdateTenantInput, Plan, SubscriptionStatus } from '@repo/api'
+import {
+  CreateTenantInput,
+  UpdateTenantInput,
+  Plan,
+  SubscriptionStatus,
+} from '@repo/api'
 import { PrismaService } from '../../../../config/database/Prisma.service'
 import { TenantEntity } from '../../domain/entities'
 import {
@@ -43,19 +48,9 @@ export class PrismaTenantRepository implements ITenantRepository {
   async create(input: CreateTenantInput): Promise<TenantEntity> {
     const tenant = await this.prisma.tenant.create({
       data: {
-        name: input.name,
-        slug: input.slug,
-        customDomain: input.customDomain ?? null,
-        logoUrl: input.logoUrl ?? null,
-        faviconUrl: input.faviconUrl ?? null,
-        primaryColor: input.primaryColor ?? null,
-        secondaryColor: input.secondaryColor ?? null,
-        displayName: input.displayName ?? null,
-        document: input.document ?? null,
-        email: input.email ?? null,
-        phone: input.phone ?? null,
-        address: input.address ?? null,
-        plan: input.plan as unknown as any ?? null,
+        ...input,
+        plan: input.plan as Plan,
+        subscriptionStatus: input.subscriptionStatus as any,
       },
     })
 
@@ -113,11 +108,13 @@ export class PrismaTenantRepository implements ITenantRepository {
     ])
 
     return {
-      tenants: tenants.map((t) => TenantEntity.restore({
-        ...t,
-        plan: t.plan as Plan | null,
-        subscriptionStatus: t.subscriptionStatus as SubscriptionStatus,
-      })),
+      tenants: tenants.map((t) =>
+        TenantEntity.restore({
+          ...t,
+          plan: t.plan as Plan | null,
+          subscriptionStatus: t.subscriptionStatus as SubscriptionStatus,
+        }),
+      ),
       total,
     }
   }

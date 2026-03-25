@@ -49,4 +49,4 @@ export interface SearchUserFilter {
 }
 
 export interface UpdateUserInput
-  extends Partial<Omit<CreateUserInput, 'tenantId'>> { }
+  extends Partial<Omit<CreateUserInput, 'tenantId'>> {}

@@ -29,9 +29,7 @@ import { AuthenticatedUser } from '../../../../common/interfaces'
 @Roles('ADMIN')
 @UseFilters(DomainExceptionFilter)
 export class TenantController {
-  constructor(
-    private readonly findTenantById: FindTenantByIdUseCase,
-  ) {}
+  constructor(private readonly findTenantById: FindTenantByIdUseCase) {}
 
   @Get('me')
   @HttpCode(HttpStatus.OK)
@@ -44,4 +42,3 @@ export class TenantController {
     return this.findTenantById.execute(user.tenantId as string)
   }
 }
-

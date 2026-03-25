@@ -25,7 +25,10 @@ export class CreateTenantAdminUseCase {
     private readonly userRepository: IUserRepository,
   ) {}
 
-  async execute(tenantId: string, input: CreateTenantAdminDto): Promise<UserEntity> {
+  async execute(
+    tenantId: string,
+    input: CreateTenantAdminDto,
+  ): Promise<UserEntity> {
     const tenant = await this.tenantRepository.findById(tenantId)
 
     if (!tenant) {

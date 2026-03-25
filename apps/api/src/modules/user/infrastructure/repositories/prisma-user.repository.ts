@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { CreateUserInput, PaginatedResponse, SearchUserFilter, UpdateUserInput } from '@repo/api'
+import {
+  CreateUserInput,
+  PaginatedResponse,
+  SearchUserFilter,
+  UpdateUserInput,
+} from '@repo/api'
 import { PrismaService } from '../../../../config/database/Prisma.service'
 import { UserEntity } from '../../domain/entities'
-import {
-  IUserRepository,
-} from '../../domain/repositories'
+import { IUserRepository } from '../../domain/repositories'
 import { BuildFilterDto } from '../utils/SearchFilters'
 
 @Injectable()
@@ -38,7 +41,11 @@ export class PrismaUserRepository implements IUserRepository {
     tenantId: string,
     filter: SearchUserFilter,
   ): Promise<PaginatedResponse<UserEntity>> {
-    const { skip = 0, limit = 10, where } = BuildFilterDto({ ...filter, tenantId })
+    const {
+      skip = 0,
+      limit = 10,
+      where,
+    } = BuildFilterDto({ ...filter, tenantId })
 
     const page = skip / limit + 1
 

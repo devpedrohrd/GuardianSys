@@ -8,6 +8,7 @@ import {
   IsString,
 } from 'class-validator'
 import { Plan } from '../../../../common/enums'
+import { IsCPF } from '../../../../common/decorators/CPF.decorator'
 
 export class CreateTenantDto implements CreateTenantInput {
   @IsString()
@@ -36,6 +37,7 @@ export class CreateTenantDto implements CreateTenantInput {
   displayName?: string | null
   @IsString()
   @IsOptional()
+  @IsCPF()
   document?: string | null
   @IsEmail()
   @IsOptional()
@@ -46,7 +48,12 @@ export class CreateTenantDto implements CreateTenantInput {
   @IsString()
   @IsOptional()
   address?: string | null
-  @ApiProperty({ enum: Plan, enumName: 'Plan', required: false, nullable: true })
+  @ApiProperty({
+    enum: Plan,
+    enumName: 'Plan',
+    required: false,
+    nullable: true,
+  })
   @IsEnum(Plan)
   @IsOptional()
   plan?: Plan | null

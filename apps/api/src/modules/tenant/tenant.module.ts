@@ -3,9 +3,7 @@ import { PrismaModule } from '../../config/database/Prisma.module'
 import { AuthModule } from '../auth/auth.module'
 import { TENANT_REPOSITORY } from './domain/repositories'
 import { PrismaTenantRepository } from './infrastructure/repositories'
-import {
-  FindTenantByIdUseCase,
-} from './application/use-cases'
+import { FindTenantByIdUseCase } from './application/use-cases'
 import { TenantController } from './presentation/controllers'
 
 @Module({
@@ -18,6 +16,6 @@ import { TenantController } from './presentation/controllers'
     },
     FindTenantByIdUseCase,
   ],
+  exports: [TENANT_REPOSITORY],
 })
 export class TenantModule {}
-

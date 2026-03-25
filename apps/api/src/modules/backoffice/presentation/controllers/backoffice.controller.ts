@@ -32,7 +32,10 @@ import {
   UpdateTenantUseCase,
 } from '../../../tenant/application/use-cases'
 import { CreateTenantAdminUseCase } from '../../application/use-cases'
-import { CreateTenantDto, UpdateTenantDto } from '../../../tenant/presentation/dtos'
+import {
+  CreateTenantDto,
+  UpdateTenantDto,
+} from '../../../tenant/presentation/dtos'
 import { CreateTenantAdminDto } from '../dtos'
 import { DomainExceptionFilter } from '../../../tenant/presentation/filters'
 import { UserExceptionFilter } from '../../../user/presentation/filters'
@@ -72,7 +75,12 @@ export class BackofficeController {
   @ApiQuery({ name: 'skip', required: false, type: String })
   @ApiQuery({ name: 'limit', required: false, type: String })
   @ApiQuery({ name: 'name', required: false, type: String })
-  @ApiQuery({ name: 'isActive', required: false, type: String, description: "'true' ou 'false'" })
+  @ApiQuery({
+    name: 'isActive',
+    required: false,
+    type: String,
+    description: "'true' ou 'false'",
+  })
   async findAll(
     @Query('skip') skip?: string,
     @Query('limit') limit?: string,

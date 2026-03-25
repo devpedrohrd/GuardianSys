@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { UserEntity } from '../../domain/entities'
 import { IUserRepository, USER_REPOSITORY } from '../../domain/repositories'
-import { UserNotFoundException, InsufficientPermissionsException } from '../../domain/exceptions'
+import {
+  UserNotFoundException,
+  InsufficientPermissionsException,
+} from '../../domain/exceptions'
 
 @Injectable()
 export class FindUserByIdUseCase {

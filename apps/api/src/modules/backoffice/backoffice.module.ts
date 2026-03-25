@@ -3,13 +3,9 @@ import { PrismaModule } from '../../config/database/Prisma.module'
 import { AuthModule } from '../auth/auth.module'
 import { CreateTenantAdminUseCase } from './application/use-cases'
 import { BackofficeController } from './presentation/controllers'
-import {
-  TENANT_REPOSITORY,
-} from '../tenant/domain/repositories'
+import { TENANT_REPOSITORY } from '../tenant/domain/repositories'
 import { PrismaTenantRepository } from '../tenant/infrastructure/repositories'
-import {
-  USER_REPOSITORY,
-} from '../user/domain/repositories'
+import { USER_REPOSITORY } from '../user/domain/repositories'
 import { PrismaUserRepository } from '../user/infrastructure/repositories'
 import {
   CreateTenantUseCase,

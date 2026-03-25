@@ -1,12 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../../../../config/database/Prisma.service';
-import { JwtService } from '@nestjs/jwt';
-import { UserNotFoundException } from '../../../user/domain/exceptions';
-import * as bcrypt from 'bcryptjs';
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { PrismaService } from '../../../../config/database/Prisma.service'
+import { JwtService } from '@nestjs/jwt'
+import { UserNotFoundException } from '../../../user/domain/exceptions'
+import * as bcrypt from 'bcryptjs'
 
 interface ResetTokenPayload {
-  sub: string;
-  email: string;
+  sub: string
+  email: string
 }
 
 @Injectable()
@@ -17,14 +17,14 @@ export class ResetPasswordUseCase {
   ) {}
 
   async execute(token: string, newPassword: string): Promise<void> {
-    let payload: ResetTokenPayload;
-    
+    let payload: ResetTokenPayload
+
     try {
       payload = this.jwtService.verify<ResetTokenPayload>(token, {
         secret: process.env.JWT_SECRET,
-      });
+      })
     } catch (e) {
-      throw new UnauthorizedException('Invalid or expired password reset token');
+      throw new UnauthorizedException('Invalid or expired password reset token')
     }
 
     const user = await this.prisma.user.findFirst({
@@ -32,13 +32,13 @@ export class ResetPasswordUseCase {
         id: payload.sub,
         email: payload.email,
       },
-    });
+    })
 
     if (!user) {
-      throw new UserNotFoundException(payload.email);
+      throw new UserNotFoundException(payload.email)
     }
 
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const hashedPassword = await bcrypt.hash(newPassword, 10)
 
     await this.prisma.user.update({
       where: {
@@ -47,6 +47,6 @@ export class ResetPasswordUseCase {
       data: {
         password: hashedPassword,
       },
-    });
+    })
   }
 }

@@ -111,7 +111,12 @@ export class UserController {
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
   ) {
-    return this.updateUser.execute(user.tenantId as string, id, dto, user.userId)
+    return this.updateUser.execute(
+      user.tenantId as string,
+      id,
+      dto,
+      user.userId,
+    )
   }
 
   @Delete(':id')

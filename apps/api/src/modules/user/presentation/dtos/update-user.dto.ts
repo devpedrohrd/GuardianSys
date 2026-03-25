@@ -52,7 +52,9 @@ export class UpdateUserDto implements UpdateUserInput {
   @IsOptional()
   canReopenCases?: boolean
 
-  @ApiPropertyOptional({ description: 'Pode visualizar dados de outros usuários' })
+  @ApiPropertyOptional({
+    description: 'Pode visualizar dados de outros usuários',
+  })
   @IsBoolean()
   @IsOptional()
   canViewOthers?: boolean
@@ -62,7 +64,9 @@ export class UpdateUserDto implements UpdateUserInput {
   @IsOptional()
   canEditOthers?: boolean
 
-  @ApiPropertyOptional({ description: 'Identificador único do usuário que criou' })
+  @ApiPropertyOptional({
+    description: 'Identificador único do usuário que criou',
+  })
   @IsString()
   @IsOptional()
   createdById?: string

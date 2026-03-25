@@ -52,12 +52,21 @@ export class UpdateTenantDto implements UpdateTenantInput {
   @IsString()
   address?: string | null
 
-  @ApiProperty({ enum: Plan, enumName: 'Plan', required: false, nullable: true })
+  @ApiProperty({
+    enum: Plan,
+    enumName: 'Plan',
+    required: false,
+    nullable: true,
+  })
   @IsOptional()
   @IsEnum(Plan)
   plan?: Plan | null
 
-  @ApiProperty({ enum: SubscriptionStatus, enumName: 'SubscriptionStatus', required: false })
+  @ApiProperty({
+    enum: SubscriptionStatus,
+    enumName: 'SubscriptionStatus',
+    required: false,
+  })
   @IsOptional()
   @IsEnum(SubscriptionStatus)
   subscriptionStatus?: SubscriptionStatus
