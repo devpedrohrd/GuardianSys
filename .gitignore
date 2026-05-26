@@ -60,3 +60,10 @@ pnpm-debug.log*
 # Misc
 .DS_Store
 *.pem
+
+AI_APPLICATION.md
+AI_CONTEXT.md
+AI_DOMAIN.md
+AI_INFRASTRUCTURE.md
+AI_PRESENTATION.md
+AI_RULES.md

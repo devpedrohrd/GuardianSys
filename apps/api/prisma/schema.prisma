@@ -45,6 +45,7 @@ model Tenant {
   createdAt          DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt          DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
+  condominius Condominium[]
   users              User[]
   @@map("tenants")
   @@index([id])
@@ -72,7 +73,52 @@ model User {
   createdBy         User?              @relation("UserCreatedBy", fields: [createdById], references: [id])
   createdUsers      User[]             @relation("UserCreatedBy")
 
+  createdCondominiums Condominium[] @relation("CondominiumCreator")
+  updatedCondominiums Condominium[] @relation("CondominiumUpdater")
+
   @@index([tenantId,id])
   @@index([email])
   @@map("users")
+
+  condominiums Condominium[]
+  userCondominiums UserCondominium[]
+}
+
+
+model Condominium {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId          String    @map("tenant_id") @db.Uuid
+  name              String    @db.VarChar(255)
+  manager           String    @db.VarChar(255)
+  managerContact    String?   @map("manager_contact") @db.VarChar(100)
+  conciergeContact  String?   @map("concierge_contact") @db.VarChar(100)
+  address           String?   @db.VarChar(500)
+  openingDate       DateTime? @map("opening_date") @db.Date
+  
+  createdById       String?   @map("created_by_id") @db.Uuid
+  updatedById       String?   @map("updated_by_id") @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz 
+
+  tenant            Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdBy         User?                @relation("CondominiumCreator", fields: [createdById], references: [id])
+  updatedBy         User?                @relation("CondominiumUpdater", fields: [updatedById], references: [id])
+
+  @@map("condominiums")
+
+  users User[]
+  userCondominiums UserCondominium[]
+}
+
+model UserCondominium {
+  userId          String   @map("user_id") @db.Uuid
+  condominiumId   String   @map("condominium_id") @db.Uuid
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  condominium     Condominium @relation(fields: [condominiumId], references: [id], onDelete: Cascade)
+
+  @@id([userId, condominiumId])
+  @@map("user_condominiums")
 }

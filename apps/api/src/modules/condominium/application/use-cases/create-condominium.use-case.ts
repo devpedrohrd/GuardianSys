@@ -1,0 +1,33 @@
+import { Injectable, Inject, NotFoundException } from '@nestjs/common'
+import {
+  ICondominiumRepository,
+  CONDOMINIUM_REPOSITORY,
+} from '../../domain/repositories/condominium.repository.interface'
+import { CreateCondominiumInput, Condominium } from '@repo/api'
+import { CondominiumEntity } from '../../domain/entities/Condominium'
+import {
+  ITenantRepository,
+  TENANT_REPOSITORY,
+} from '../../../tenant/domain/repositories/tenant.repository.interface'
+import { CondominiumHasNoTenantException } from '../../domain/exceptions/condominium.exception'
+
+@Injectable()
+export class CreateCondominiumUseCase {
+  constructor(
+    @Inject(CONDOMINIUM_REPOSITORY)
+    private readonly condominiumRepository: ICondominiumRepository,
+    @Inject(TENANT_REPOSITORY)
+    private readonly tenantRepository: ITenantRepository,
+  ) {}
+
+  async execute(input: CreateCondominiumInput): Promise<Condominium> {
+    const tenant = await this.tenantRepository.findById(input.tenantId)
+
+    if (!tenant) {
+      throw new CondominiumHasNoTenantException(input.tenantId)
+    }
+
+    const condominium = CondominiumEntity.create(input)
+    return await this.condominiumRepository.create(condominium)
+  }
+}
