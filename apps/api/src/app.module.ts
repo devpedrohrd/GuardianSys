@@ -4,6 +4,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { UserModule } from './modules/user/user.module'
 import { BackofficeModule } from './modules/backoffice/backoffice.module'
 import { CondominiumModule } from './modules/condominium/condominium.module'
+import { ClientModule } from './modules/client/client.module'
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { CondominiumModule } from './modules/condominium/condominium.module'
     UserModule,
     BackofficeModule,
     CondominiumModule,
+    ClientModule,
   ],
   controllers: [],
   providers: [],

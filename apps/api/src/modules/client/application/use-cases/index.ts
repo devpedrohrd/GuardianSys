@@ -1,0 +1,5 @@
+export * from './create-client.use-case'
+export * from './find-client-by-id.use-case'
+export * from './find-all-clients.use-case'
+export * from './update-client.use-case'
+export * from './delete-client.use-case'

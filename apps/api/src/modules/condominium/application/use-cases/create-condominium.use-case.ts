@@ -27,7 +27,6 @@ export class CreateCondominiumUseCase {
       throw new CondominiumHasNoTenantException(input.tenantId)
     }
 
-    const condominium = CondominiumEntity.create(input)
-    return await this.condominiumRepository.create(condominium)
+    return await this.condominiumRepository.create(input)
   }
 }

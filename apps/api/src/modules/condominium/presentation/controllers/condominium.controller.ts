@@ -38,7 +38,6 @@ import { SearchCondominiumDto } from '../dtos/search-condominium.dto'
 @ApiBearerAuth('access-token')
 @Controller('condominiums')
 @UseGuards(JwtAuthGuard, TenantGuard, RolesGuard)
-@Roles('ADMIN', 'SUPER_ADMIN')
 export class CondominiumController {
   constructor(
     private readonly createCondominium: CreateCondominiumUseCase,
@@ -46,10 +45,11 @@ export class CondominiumController {
     private readonly findCondominiumById: FindCondominiumByIdUseCase,
     private readonly findAllCondominiums: FindAllCondominiumsUseCase,
     private readonly deleteCondominium: DeleteCondominiumUseCase,
-  ) { }
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @Roles('ADMIN')
   @ApiOperation({ summary: 'Cria um novo condomínio' })
   @ApiResponse({ status: 201, description: 'Condomínio criado com sucesso' })
   async create(
@@ -66,6 +66,7 @@ export class CondominiumController {
   }
 
   @Get()
+  @Roles('ADMIN', 'INVESTIGATOR')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Lista os condomínios' })
   @ApiResponse({ status: 200, description: 'Condomínios listados com sucesso' })
@@ -80,6 +81,7 @@ export class CondominiumController {
   }
 
   @Get(':id')
+  @Roles('ADMIN', 'INVESTIGATOR')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Busca um condomínio pelo id' })
   @ApiResponse({
@@ -91,6 +93,7 @@ export class CondominiumController {
   }
 
   @Patch(':id')
+  @Roles('ADMIN')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Atualiza um condomínio' })
   @ApiResponse({
@@ -106,6 +109,7 @@ export class CondominiumController {
   }
 
   @Delete(':id')
+  @Roles('ADMIN')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Deleta um condomínio' })
   @ApiResponse({ status: 204, description: 'Condomínio deletado com sucesso' })

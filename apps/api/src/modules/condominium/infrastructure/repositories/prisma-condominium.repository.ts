@@ -28,7 +28,7 @@ export class PrismaCondominiumRepository implements ICondominiumRepository {
   }
 
   async create(input: CreateCondominiumDto): Promise<CondominiumEntity> {
-    const { createdBy, ...rest } = input;
+    const { createdBy, ...rest } = input
 
     const condominium = await this.prisma.condominium.create({
       data: {
