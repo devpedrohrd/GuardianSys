@@ -88,8 +88,11 @@ export class CondominiumController {
     status: 200,
     description: 'Condomínio encontrado com sucesso',
   })
-  async findById(@Param('id') id: string) {
-    return this.findCondominiumById.execute(id)
+  async findById(
+    @Param('id') id: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.findCondominiumById.execute(id, user.tenantId as string)
   }
 
   @Patch(':id')

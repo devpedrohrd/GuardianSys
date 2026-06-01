@@ -10,6 +10,7 @@ import {
   TENANT_REPOSITORY,
 } from '../../../tenant/domain/repositories/tenant.repository.interface'
 import { CondominiumHasNoTenantException } from '../../domain/exceptions/condominium.exception'
+import { ICacheService, CACHE_SERVICE, CacheKeyBuilder } from '../../../../common/cache'
 
 @Injectable()
 export class CreateCondominiumUseCase {
@@ -18,6 +19,8 @@ export class CreateCondominiumUseCase {
     private readonly condominiumRepository: ICondominiumRepository,
     @Inject(TENANT_REPOSITORY)
     private readonly tenantRepository: ITenantRepository,
+    @Inject(CACHE_SERVICE)
+    private readonly cache: ICacheService,
   ) {}
 
   async execute(input: CreateCondominiumInput): Promise<Condominium> {
@@ -27,6 +30,11 @@ export class CreateCondominiumUseCase {
       throw new CondominiumHasNoTenantException(input.tenantId)
     }
 
-    return await this.condominiumRepository.create(input)
+    const condominium = await this.condominiumRepository.create(input)
+
+    const tag = CacheKeyBuilder.forTag(input.tenantId, 'condominiums')
+    await this.cache.invalidateByTag(tag)
+
+    return condominium
   }
 }

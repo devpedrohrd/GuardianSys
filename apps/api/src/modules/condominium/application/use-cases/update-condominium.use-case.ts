@@ -10,12 +10,15 @@ import {
 } from '../../domain/exceptions/condominium.exception'
 import { AuthenticatedUser } from '../../../../common/interfaces'
 import { UpdateCondominiumDto } from '../../presentation/dtos'
+import { ICacheService, CACHE_SERVICE, CacheKeyBuilder } from '../../../../common/cache'
 
 @Injectable()
 export class UpdateCondominiumUseCase {
   constructor(
     @Inject(CONDOMINIUM_REPOSITORY)
     private readonly condominiumRepository: ICondominiumRepository,
+    @Inject(CACHE_SERVICE)
+    private readonly cache: ICacheService,
   ) {}
 
   async execute(
@@ -32,6 +35,13 @@ export class UpdateCondominiumUseCase {
       throw new CondominiumNotBelongsToTenantException(id)
     }
 
-    return await this.condominiumRepository.update(id, input, user.tenantId)
+    const result = await this.condominiumRepository.update(id, input, user.tenantId)
+
+    const entityKey = CacheKeyBuilder.forEntity(user.tenantId as string, 'condominium', id)
+    const tag = CacheKeyBuilder.forTag(user.tenantId as string, 'condominiums')
+    await this.cache.del(entityKey)
+    await this.cache.invalidateByTag(tag)
+
+    return result
   }
 }

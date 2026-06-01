@@ -4,12 +4,15 @@ import {
   UserNotFoundException,
   InsufficientPermissionsException,
 } from '../../domain/exceptions'
+import { ICacheService, CACHE_SERVICE, CacheKeyBuilder } from '../../../../common/cache'
 
 @Injectable()
 export class DeleteUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
+    @Inject(CACHE_SERVICE)
+    private readonly cache: ICacheService,
   ) {}
 
   async execute(
@@ -46,5 +49,10 @@ export class DeleteUserUseCase {
     }
 
     await this.userRepository.delete(tenantId, id)
+
+    const entityKey = CacheKeyBuilder.forEntity(tenantId, 'user', id)
+    const tag = CacheKeyBuilder.forTag(tenantId, 'users')
+    await this.cache.del(entityKey)
+    await this.cache.invalidateByTag(tag)
   }
 }

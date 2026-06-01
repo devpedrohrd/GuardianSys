@@ -7,12 +7,15 @@ import {
   UserNotFoundException,
   InsufficientPermissionsException,
 } from '../../domain/exceptions'
+import { ICacheService, CACHE_SERVICE, CacheKeyBuilder } from '../../../../common/cache'
 
 @Injectable()
 export class UpdateUserUseCase {
   constructor(
     @Inject(USER_REPOSITORY)
     private readonly userRepository: IUserRepository,
+    @Inject(CACHE_SERVICE)
+    private readonly cache: ICacheService,
   ) {}
 
   async execute(
@@ -40,6 +43,13 @@ export class UpdateUserUseCase {
       updateData.password = await bcrypt.hash(updateData.password, 10)
     }
 
-    return this.userRepository.update(tenantId, id, updateData)
+    const user = await this.userRepository.update(tenantId, id, updateData)
+
+    const entityKey = CacheKeyBuilder.forEntity(tenantId, 'user', id)
+    const tag = CacheKeyBuilder.forTag(tenantId, 'users')
+    await this.cache.del(entityKey)
+    await this.cache.invalidateByTag(tag)
+
+    return user
   }
 }
