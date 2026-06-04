@@ -9,12 +9,20 @@ import { Response } from 'express'
 import {
   ClientException,
   ClientNotFoundException,
+  ClientAlreadyExistsException,
   ClientAlreadyDeletedException,
+  CondominiumNotFoundException,
+  ClientCondominiumAlreadyExistsException,
+  ClientCondominiumNotFoundException,
 } from '../../domain/exceptions'
 
 const EXCEPTION_STATUS_MAP = new Map<string, HttpStatus>([
   [ClientNotFoundException.name, HttpStatus.NOT_FOUND],
+  [ClientAlreadyExistsException.name, HttpStatus.CONFLICT],
   [ClientAlreadyDeletedException.name, HttpStatus.CONFLICT],
+  [CondominiumNotFoundException.name, HttpStatus.NOT_FOUND],
+  [ClientCondominiumAlreadyExistsException.name, HttpStatus.CONFLICT],
+  [ClientCondominiumNotFoundException.name, HttpStatus.NOT_FOUND],
 ])
 
 @Catch(ClientException)

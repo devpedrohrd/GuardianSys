@@ -5,6 +5,9 @@ import {
   IsOptional,
   IsEmail,
   IsDateString,
+  IsUUID,
+  IsArray,
+  ArrayNotEmpty,
 } from 'class-validator'
 import { IsCPF } from '../../../../common/decorators/CPF.decorator'
 
@@ -13,6 +16,12 @@ export class CreateClientDto {
   @IsString()
   @IsNotEmpty()
   name!: string
+
+  @ApiProperty({ description: 'IDs dos condomínios ao qual o cliente será vinculado', type: [String] })
+  @IsArray()
+  @ArrayNotEmpty()
+  @IsUUID(undefined, { each: true })
+  condominiumIds!: string[]
 
   @ApiPropertyOptional({ description: 'E-mail do cliente' })
   @IsEmail()

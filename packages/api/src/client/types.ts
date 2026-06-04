@@ -1,3 +1,5 @@
+import { Condominium } from '../condominium/type.js'
+
 export interface Client {
   id: string
   tenantId: string
@@ -19,6 +21,7 @@ export interface Client {
 export interface CreateClientInput {
   tenantId: string
   name: string
+  condominiumIds: string[]
   email?: string | null
   phone?: string | null
   document?: string | null
@@ -30,7 +33,7 @@ export interface CreateClientInput {
 }
 
 export interface UpdateClientInput
-  extends Partial<Omit<CreateClientInput, 'tenantId' | 'createdById'>> {
+  extends Partial<Omit<CreateClientInput, 'tenantId' | 'createdById' | 'condominiumIds'>> {
   updatedById?: string | null
 }
 
@@ -41,4 +44,31 @@ export interface SearchClientFilter {
   email?: string
   document?: string
   tenantId?: string
+}
+
+// --- ClientCondominium types ---
+
+export interface ClientCondominium {
+  clientId: string
+  condominiumId: string
+  createdAt: Date
+  client?: Client
+  condominium?: Condominium
+}
+
+export interface CreateClientCondominiumInput {
+  clientId: string
+  condominiumIds: string[]
+}
+
+export interface RemoveClientCondominiumInput {
+  clientId: string
+  condominiumId: string
+}
+
+export interface SearchClientCondominiumFilter {
+  clientId?: string
+  condominiumId?: string
+  skip?: number
+  limit?: number
 }
