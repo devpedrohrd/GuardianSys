@@ -48,6 +48,7 @@ model Tenant {
   condominius Condominium[]
   users       User[]
   clients     Client[]
+  bankAccounts BankAccount[]
 
   @@index([id])
   @@map("tenants")
@@ -82,7 +83,9 @@ model User {
 
   condominiums     Condominium[]
   userCondominiums UserCondominium[]
-
+  createdBankAccounts BankAccount[] @relation("BankAccountCreator")
+  updatedBankAccounts BankAccount[] @relation("BankAccountUpdater")
+  
   @@index([tenantId, id])
   @@index([email])
   @@map("users")
@@ -165,4 +168,29 @@ model ClientCondominium {
 
   @@id([clientId, condominiumId])
   @@map("client_condominiums")
+}
+
+model BankAccount {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  tenantId          String    @map("tenant_id") @db.Uuid
+  name              String    @db.VarChar(255)
+  
+  bankCode          String?   @map("bank_code") @db.VarChar(10)
+  agency            String?   @db.VarChar(20)
+  agencyDigit       String?   @map("agency_digit") @db.VarChar(5)
+  accountNumber     String?   @map("account_number") @db.VarChar(50)
+  accountDigit      String?   @map("account_digit") @db.VarChar(5)
+  pixKey            String?   @map("pix_key") @db.VarChar(255) 
+  
+  createdById       String?   @map("created_by_id") @db.Uuid
+  updatedById       String?   @map("updated_by_id") @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz
+
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  createdBy         User?     @relation("BankAccountCreator", fields: [createdById], references: [id])
+  updatedBy         User?     @relation("BankAccountUpdater", fields: [updatedById], references: [id])
+
+  @@map("bank_accounts")
 }

@@ -16,8 +16,8 @@ export class PrismaCondominiumRepository implements ICondominiumRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<CondominiumEntity | null> {
-    const condominium = await this.prisma.condominium.findUnique({
-      where: { id },
+    const condominium = await this.prisma.condominium.findFirst({
+      where: { id, deletedAt: null },
     })
 
     if (!condominium) {
@@ -63,14 +63,9 @@ export class PrismaCondominiumRepository implements ICondominiumRepository {
   }
 
   async delete(id: string, tenantId: string): Promise<void> {
-    await this.prisma.userCondominium.deleteMany({
-      where: {
-        condominiumId: id,
-      },
-    })
-
-    await this.prisma.condominium.delete({
-      where: { id, tenantId },
+    await this.prisma.condominium.updateMany({
+      where: { id, tenantId, deletedAt: null },
+      data: { deletedAt: new Date() },
     })
   }
 
